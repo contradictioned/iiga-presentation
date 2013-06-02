@@ -1,3 +1,7 @@
+body {
+  background: black;
+}
+
 .deck-container {
   font-family: "Helvetica Neue", sans-serif;
   font-size: 1.75em;
@@ -8,10 +12,71 @@
   font-size: 18px;
 }
 
-h1 small {
-  font-size: 24px !important;
+#title-slide {
+  background: linear-gradient(to bottom, rgba(16,16,32,1) 0%,rgba(32,32,64,1) 100%);
+  /*background: #112;*/
+}
+#title-slide h1 {
+  top: 70%;
+  font-size: 40px;
+  color: white;
+}
+#title-slide h1 small {
+  font-size: 30px !important;
   line-height: 50px !important;
 }
+
+/* Use this for nearly everytimes hidden stuff */
+.default-hidden {
+  display:none;
+}
+
+/* BFS animation */
+
+.on-slide-bfs-run #bfs_explain {
+  display:block;
+}
+
+.on-slide-slide_bfs_it1_map #bfs_explain_map,
+.on-slide-slide_bfs_it2_map #bfs_explain_map,
+.on-slide-slide_bfs_it3_map #bfs_explain_map,
+.on-slide-slide_bfs_it4_map #bfs_explain_map,
+.on-slide-slide_bfs_it5_map #bfs_explain_map,
+.on-slide-slide_bfs_it6_map #bfs_explain_map {
+  display:block;
+}
+
+.on-slide-slide_bfs_it1_reduce #bfs_explain_reduce,
+.on-slide-slide_bfs_it2_reduce #bfs_explain_reduce,
+.on-slide-slide_bfs_it3_reduce #bfs_explain_reduce,
+.on-slide-slide_bfs_it4_reduce #bfs_explain_reduce,
+.on-slide-slide_bfs_it5_reduce #bfs_explain_reduce,
+.on-slide-slide_bfs_it6_reduce #bfs_explain_reduce {
+  display:block;
+}
+
+.on-slide-slide_bfs_add_edge #bfs_add {
+  display:block;
+}
+.on-slide-slide_bfs_remove_edge #bfs_remove {
+  display:block;
+}
+.on-slide-slide_bfs_final_graph #bfs_end {
+  display:block;
+}
+.on-slide-slide_bfs_it3_map #bfs_explain_map_add {
+  display:list-item;
+}
+.on-slide-slide_bfs_it3_reduce #bfs_explain_reduce_add {
+  display:list-item;
+}
+.on-slide-slide_bfs_it5_map #bfs_explain_map_remove {
+  display:list-item;
+}
+.on-slide-slide_bfs_it5_reduce #bfs_explain_reduce_remove {
+  display:list-item;
+}
+/* /BFS animation */
 
 /**
 BELOW ARE FROM swiss.css

@@ -30,6 +30,7 @@
 
     <script src="modernizr.custom.js"></script>
     <script src="libs/jquery-1.7.2.min.js"></script>
+    <script src="theme.js"></script>
 
     <!-- Deck Core and extensions -->
     <script src="core/deck.core.js"></script>
@@ -44,6 +45,10 @@
     <script src="libs/jquerysvg/jquery.svg.min.js"></script>
     <script src="libs/jquerysvg/jquery.svganim.min.js"></script>
     <script src="extensions/svg/deck.svg.js"></script>
+
+    <script src="libs/sigmajs/sigma.min.js" type="text/javascript"></script>
+    <script src="libs/sigmajs/sigma.parseGexf.js" type="text/javascript"></script>
+    <script src="libs/sigmajs/sigma.forceatlas2.js" type="text/javascript"></script>
   </head>
 
 <body>
@@ -53,71 +58,191 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <article class="deck-container">
   <section class="slide" id="title-slide">
-    <h1>Incremental Iterative Graph Algorithms with MapReduce<br />
+    <h1>Incremental Iterative Graph Algorithms<br /> with MapReduce<br />
     <small>Bachelor thesis presentation by Manuel Hoffmann</small></h1>
+    <div style="width:800px; height:300px" id="sigma-title"></div>
   </section>
-<!-- - - - Agenda - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<section class="slide" id="agenda">
-  <h2>Agenda</h2>
-  <ol style="position:absolute; left:10%; top:20%; height:auto">
-    <li id="agenda-bullet-introduction">Introduction
-      <ol>
-        <li>Graphs</li>
-        <li>MapReduce</li>
-        <li>Graphs and MapReduce</li>
-        <li>Incremental computation</li>
-      </ol>
-    </li>
-    <li id="agenda-bullet-bfs">Breadth-First Search
-      <ol>
-        <li>Basic BFS Algorithm</li>
-        <li>Updates of the Graph</li>
-        <li>Combiner and Termination</li>
-      </ol>
-    </li>
-    <li id="agenda-bullet-apsp">All-Pairs Shortest Paths
-      <ol>
-        <li>Basic APSP Algorithm</li>
-        <li>Updates of the Graph</li>
-        <li>Combiner and Termination</li>
-      </ol>
-    </li>
-  </ol>
-  <ol start="4" style="position:absolute; left:50%; top:20%; height:auto">
-    <li id="agenda-bullet-pagerank">PageRank
-      <ol>
-        <li>Basic Algorithm</li>
-        <li>Updates of the Graph</li>
-        <li>Combiner and Termination</li>
-      </ol>
-    </li>
-    <li id="agenda-bullet-evaluation">Evaluation of Breadth-First Search and Pagerank</li>
-    <li id="agenda-bullet-conclusion">Final thoughts and Outlook</li>
-  </ol>
-</section>
+  <!-- - - - Agenda - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <section class="slide" id="agenda">
+    <h2>Agenda</h2>
+    <ol style="position:absolute; left:10%; top:20%; height:auto">
+      <li id="agenda-bullet-introduction">Introduction
+        <ol>
+          <li>Graphs</li>
+          <li>MapReduce</li>
+          <li>Graphs and MapReduce</li>
+          <li>Incremental computation</li>
+        </ol>
+      </li>
+      <li id="agenda-bullet-bfs">Breadth-First Search
+        <ol>
+          <li>Basic BFS Algorithm</li>
+          <li>Updates of the Graph</li>
+          <li>Combiner and Termination</li>
+        </ol>
+      </li>
+      <li id="agenda-bullet-apsp">All-Pairs Shortest Paths
+        <ol>
+          <li>Basic APSP Algorithm</li>
+          <li>Updates of the Graph</li>
+          <li>Combiner and Termination</li>
+        </ol>
+      </li>
+    </ol>
+    <ol start="4" style="position:absolute; left:50%; top:20%; height:auto">
+      <li id="agenda-bullet-pagerank">PageRank
+        <ol>
+          <li>Basic Algorithm</li>
+          <li>Updates of the Graph</li>
+          <li>Combiner and Termination</li>
+        </ol>
+      </li>
+      <li id="agenda-bullet-evaluation">Evaluation of Breadth-First Search and Pagerank</li>
+      <li id="agenda-bullet-conclusion">Final thoughts and Outlook</li>
+    </ol>
+  </section>
 
-
-  <section class="slide">
-    <h2>SVG Introduction</h2>
+  <!-- - - - Introduction - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <section class="slide" id="graph-def">
+    <h2>Graphs</h2>
     <ul>
-      <li>Scalable Vector Graphics (SVG)
+      <li>What is a graph?
         <ul>
-          <li>Standard format for the web (and more)</li>
-          <li>Vector graphics: arbitrary stretching, no pixels</li>
-          <li>Cool editors (e.g., <a href="http://inkscape.org/">Inkscape</a>)</li>
-          <li>Lot of existing SVG (smiley by <a href="http://openclipart.org/detail/77641/smiley-face-by-inky2010">inky2010</a>)</li>
+          <li class="slide anim-show" data-what="#nodes" id="graph-def-nodes">A set of nodes <strong>V</strong> (here: V = { A, B, C, D, E, F })</li>
+          <li class="slide anim-show" data-what="#undirected" id="graph-def-edges">And a set of edges, connecting the nodes <strong>E ⊆ V × V</strong><br />either undirected... </li>
+          <li class="slide anim-show" data-what="#directed" id="graph-def-edges">... or directed (here: E = {(A,B), (B,D), (A,D), (D,F), (F,C), (E,F), (C,D), (C,E), (A,C), (D,A), (F,D)})</li>
         </ul>
       </li>
-      <a href="http://openclipart.org/detail/77641/smiley-face-by-inky2010">
-        <object type="deckjs/svg" class="svgitem floatright">
-          <param name="src" value="vectorgraphics/bellmanford_graph.svg" />
-          <param name="width" value="300px" />
-          <param name="height" value="300px" />
-        </object>
-      </a>
+      <object type="deckjs/svg" class="svgitem floatright example_graph">
+        <param name="src" value="vectorgraphics/example_graph.svg" />
+        <param name="width" value="300px" />
+        <param name="height" value="300px" />
+      </object>
     </ul>
   </section>
+
+  <section class="slide" id="graph-rep">
+    <h2>Representing Graphs</h2>
+    <div style="float:left; width: 30%">
+      <h3>The bad way</h3>
+      <ul>
+        <li>Adjacency Matrix</li>
+        <li>Space: O(n²)</li>
+        <li>+ element access</li>
+        <li>+ </li>
+      </ul>
+
+      <pre>
+  <strong>A B C D</strong>
+<strong>A</strong> <span class="example_graph">0</span> <span class="example_graph">1</span> <span class="example_graph">1</span> <span class="example_graph">0</span>
+<strong>B</strong> <span class="example_graph">1</span> <span class="example_graph">0</span> <span class="example_graph">1</span> <span class="example_graph">0</span>
+<strong>C</strong> <span class="example_graph">1</span> <span class="example_graph">1</span> <span class="example_graph">0</span> <span class="example_graph">1</span>
+<strong>D</strong> <span class="example_graph">0</span> <span class="example_graph">0</span> <span class="example_graph">1</span> <span class="example_graph">0</span>
+</pre>
+    </div>
+    <div style="float:left; width: 40%">
+      <object type="deckjs/svg" class="svgitem floatright example_graph">
+        <param name="src" value="vectorgraphics/example_graph2.svg" />
+        <param name="width" value="300px" />
+        <param name="height" value="300px" />
+      </object>
+    </div>
+    <div style="float:left; width: 30%">
+      <h3>The good way</h3>
+      <ul>
+        <li>Adjacency List</li>
+        <li>Space: O(n+m)</li>
+        <li>+ iterate over adjacent</li>
+      </ul>
+
+      <pre>
+A → B, C
+B → A, C
+C → A, B, D
+D → C
+</pre>
+    </div>
+  </section>
   
+
+  <!-- - - - Breadth-First Search - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  <section class="slide" id="bfs-run">
+    <h2>Breadth-First Search</h2>
+    <div style="position:absolute">
+      <p id="bfs_explain" class="default-hidden">Example BFS with start node <strong>A</strong></p>
+
+      <div id="bfs_explain_map" class="default-hidden">
+        <strong>Map phase:</strong>
+        <ul>
+          <li>∀ node: emit <span style="color:blue">adjacent nodes</span> to itself</li>
+          <li>∀ node with distance &lt; ∞: <br />
+            emit <span style="color:red">distance + 1</span> to neighbours</li>
+          <li id="bfs_explain_map_add" class="default-hidden" style="font-style:italic">In the change set:<br />
+            ∀ new edge (<strong>A,D</strong>): emit <strong>{D}</strong> to A</li>
+          <li id="bfs_explain_map_remove" class="default-hidden" style="font-style:italic">In the delete set:<br />
+            ∀ edge (<strong>A,D</strong>) to be removed: emit <strong style="text-decoration:overline">{D}</strong> to A</li>
+        </ul>
+      </div>
+
+      <div id="bfs_explain_reduce" class="default-hidden">
+        <strong>Reduce phase:</strong>
+        <ul>
+          <li>Collect <span style="color:blue">sets of nodes</span></li>
+          <li id="bfs_explain_reduce_add" class="default-hidden">Compute the <span style="color:blue">union</span> of these sets</li>
+          <li id="bfs_explain_reduce_remove" class="default-hidden"><span style="color:blue">Subtract <span style="text-decoration:overline">{·}</span></span> from the other set</li>
+          <li>Compute <span style="color:red">min{distances}</span></li>
+          <li>Emit line of adjacency list</li>
+        </ul>
+      </div>
+      
+      <p id="bfs_add" class="default-hidden"><strong>Update</strong><br />Add edge (A,D) to the graph</p>
+      <p id="bfs_remove" class="default-hidden"><strong>Update</strong><br />Remove edge (A,B) from the graph</p>
+      
+      <p id="bfs_end" class="default-hidden">Resulting graph:</p>
+    </div>
+
+    <!-- The animations -->
+    <div class="anim-show" data-what="#bfs_initial_graph" id="slide_bfs_initial_graph"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it1_map"></div>
+    <div class="anim-hide slide" data-what="#bfs_initial_graph" id="slide_bfs_it1_map"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it1_reduce"></div>
+    <div class="anim-hide slide" data-what="#bfs_it1_map" id="slide_bfs_it1_reduce"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it2_map"></div>
+    <div class="anim-hide slide" data-what="#bfs_it1_reduce" id="slide_bfs_it2_map"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it2_reduce"></div>
+    <div class="anim-hide slide" data-what="#bfs_it2_map" id="slide_bfs_it2_reduce"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_add_edge"></div>
+    <div class="anim-hide slide" data-what="#bfs_it2_reduce" id="slide_bfs_add_edge"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it3_map"></div>
+    <div class="anim-hide slide" data-what="#bfs_add_edge" id="slide_bfs_it3_map"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it3_reduce"></div>
+    <div class="anim-hide slide" data-what="#bfs_it3_map" id="slide_bfs_it3_reduce"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it4_map"></div>
+    <div class="anim-hide slide" data-what="#bfs_it3_reduce" id="slide_bfs_it4_map"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it4_reduce"></div>
+    <div class="anim-hide slide" data-what="#bfs_it4_map" id="slide_bfs_it4_reduce"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_remove_edge"></div>
+    <div class="anim-hide slide" data-what="#bfs_it4_reduce" id="slide_bfs_remove_edge"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it5_map"></div>
+    <div class="anim-hide slide" data-what="#bfs_remove_edge" id="slide_bfs_it5_map"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it5_reduce"></div>
+    <div class="anim-hide slide" data-what="#bfs_it5_map" id="slide_bfs_it5_reduce"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it6_map"></div>
+    <div class="anim-hide slide" data-what="#bfs_it5_reduce" id="slide_bfs_it6_map"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_it6_reduce"></div>
+    <div class="anim-hide slide" data-what="#bfs_it6_map" id="slide_bfs_it6_reduce"></div>
+    <div class="slide anim-show anim-continue" data-what="#bfs_final_graph"></div>
+    <div class="anim-hide slide" data-what="#bfs_it6_reduce" id="slide_bfs_final_graph"></div>
+    <!-- /The animations -->
+
+    <div style="float:right">
+      <object type="deckjs/svg" class="svgitem floatright bfs-run">
+        <param name="src" value="vectorgraphics/bfs_run.svg" />
+        <param name="width" value="600px" />
+        <param name="height" value="500px" />
+      </object>
+    </div>
+  </section>
 
 </article>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
