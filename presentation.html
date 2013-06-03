@@ -49,6 +49,9 @@
     <script src="libs/sigmajs/sigma.min.js" type="text/javascript"></script>
     <script src="libs/sigmajs/sigma.parseGexf.js" type="text/javascript"></script>
     <script src="libs/sigmajs/sigma.forceatlas2.js" type="text/javascript"></script>
+
+    <script src="libs/Jit/jit.js"></script>
+    <script src="bfsupdate.js"></script>
   </head>
 
 <body>
@@ -165,6 +168,10 @@ D → C
   </section>
   
 
+  <section class="slide" id="bfs-header">
+    <h1>Breadth-First Search</h1>
+  </section>
+
   <!-- - - - Breadth-First Search - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <section class="slide" id="bfs-run">
     <h2>Breadth-First Search</h2>
@@ -242,6 +249,17 @@ D → C
         <param name="height" value="500px" />
       </object>
     </div>
+  </section>
+
+  <section class="slide">
+    <h2>Breadth-First Seach (Analysis)</h2>
+    <div id="bfs_update_example_graph" style="width:600px; height:400px; float:right"></div>
+    <ul>
+      <li>Runtime: <strong>#iterations ∈ O(diameter(G))</strong></li>
+      <li>Update cost: <strong>#iterations ∈ O(diameter(G) - <em>k</em>)</strong></li>
+    </ul>
+    <button type="button" id="remove-edge-bfs-button">Remove (A,B)</button><br />
+    <button type="button" id="add-edge-bfs-button">Add (A,H)</button>
   </section>
 
 </article>

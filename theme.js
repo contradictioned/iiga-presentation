@@ -33,4 +33,6 @@ $(function() {
 	window.setTimeout(function() {
 		sigInst.stopForceAtlas2();
 	},10000)
+
+	initBfsUpdateGraph();
 })
