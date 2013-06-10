@@ -183,7 +183,7 @@ D → C
     <ul>
       <li id="bfs-intro-map" class="slide"><strong>Mapper</strong>:
         <ul>
-          <li>Read line of adjacency list</li>
+          <li>Read line of adjacency list, e.g. <code>A  0 B C</code></li>
           <li>emit <span style="color:blue">adjacent nodes</span> to itself</li>
           <li>if distance &lt; ∞: <br />
             emit <span style="color:red">distance + 1</span> to neighbours</li>
@@ -290,7 +290,7 @@ D → C
       <li id="bfs_update_action" class="slide">Update every node <strong>dependent only on B</strong><br />
         i.e. <em>B1, B2, B3, B4</em> but not <em>B5</em></li>
       <li id="bfs_update_mapreduce" class="slide">Still, full iteration for each ring</li>
-      <li>Update cost: <strong>#iterations ∈ O(diameter(G) - <em>k</em>)</strong></li>
+      <li id="bfs_update_cost" class="slide">Update cost: <strong>#iterations ∈ O(diameter(G) - <em>k</em>)</strong></li>
     </ul>
   </section>
 
@@ -301,8 +301,7 @@ D → C
     <h2>All-Pairs Shortest-Path</h2>
     <ul>
     	
-      <li>Given a (undirected) graph G = (V,E), a start node A ∈ V,<br />
-        a weight c: E ⟶ ℝ+</li>
+      <li>Given a (undirected) graph G = (V,E) and a weight c: E ⟶ ℝ+</li>
       <li>Return for every node a shortest path w.r.t. c to every other node</li>
       <li class="slide" id="apsp-how-to-weight">Weights are assigned to the edges in the adjacency list, e.g.
         <pre><code>A	(B, 2), (C, 5)
@@ -354,8 +353,10 @@ B	(A, 2), (C, 1) ...</code></pre></li>
     <div class="anim-hide slide" data-what="#apsp_initialGraph" id="slide_apsp_map1"></div>
     <div class="slide anim-show anim-continue" data-what="#apsp_step1"></div>
     <div class="anim-hide slide" data-what="#apsp_map1" id="slide_apsp_step1"></div>
+    <div class="slide anim-show anim-continue" data-what="#apsp_step1_2"></div>
+    <div class="anim-hide slide" data-what="#apsp_step1" id="slide_apsp_step1"></div>
     <div class="slide anim-show anim-continue" data-what="#apsp_map2"></div>
-    <div class="anim-hide slide" data-what="#apsp_step1" id="slide_apsp_map2"></div>
+    <div class="anim-hide slide" data-what="#apsp_step1_2" id="slide_apsp_map2"></div>
     <div class="slide anim-show anim-continue" data-what="#apsp_step2"></div>
     <div class="anim-hide slide" data-what="#apsp_map2" id="slide_apsp_step1"></div>
     <object type="deckjs/svg" class="svgitem floatright bfs-run">
@@ -364,6 +365,48 @@ B	(A, 2), (C, 1) ...</code></pre></li>
       <param name="height" value="400px" />
     </object>
   </section>
+
+  <section class="slide" id="pr-header">
+    <h1>PageRank</h1>
+  </section>
+
+  <section class="slide" id="pr-introduction">
+    <h2>PageRank</h2>
+    <ul>
+      <li>Given a graph G = (V,E) and a probability p: E ⟶ {0,1} ⊂ ℝ<br />
+        where p is a probability distribution, i.e. Σp(e) = 1</li>
+      <div class="slide anim-show anim-continue" data-what="#pr_formula"></div>
+      <li class="slide">Return for every node its PageRank value</li>
+      <div class="slide anim-show anim-continue" data-what="#pr_formula_rnd"></div>
+      <li class="slide" id="pr-informally">PR(n) = <em>possibility, that a random surfer clicks a link on another website to website n <br />
+      <div class="slide anim-show anim-continue" data-what="#pr_formula_sum"></div>
+      <span class="slide" id="pr-informally2">and possibility, that a she types a random url (∈ V) into her browser</span></em></li>
+      <object type="deckjs/svg" class="svgitem floatright bfs-run">
+        <param name="src" value="vectorgraphics/pr_formula.svg" />
+        <param name="width" value="600px" />
+        <param name="height" value="150px" />
+      </object>
+    </ul>
+  </section>
+
+  <section class="slide" id="pr-mapred">
+    <h2>PageRank with MapReduce</h2>
+    <ul>
+      <li><strong>Mapper</strong>
+        <ul>
+          <li>emit neighbours to itself</li>
+          <li>emit PR / outdegree to neighbours</li>
+        </ul>
+      </li>
+      <li><strong>Reducer</strong>
+        <ul>
+          <li>collect neighbours</li>
+          <li>sum up incoming PR ratios</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
 </article>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- - - - End of the presentatoin - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
