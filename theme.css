@@ -82,7 +82,7 @@ body {
 BELOW ARE FROM swiss.css
  **/
 .deck-container .slide {
-  background: #fff;
+  /* background: #fff;*/
 }
 .deck-container .slide h1 {
   color: #000;

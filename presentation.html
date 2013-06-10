@@ -168,13 +168,40 @@ D → C
   </section>
   
 
+  <!-- - - - Breadth-First Search - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <section class="slide" id="bfs-header">
     <h1>Breadth-First Search</h1>
   </section>
 
-  <!-- - - - Breadth-First Search - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-  <section class="slide" id="bfs-run">
+  <section class="slide" id="bfs-introduction">
     <h2>Breadth-First Search</h2>
+    <ul>
+      <li>Given a graph G = (V,E), a start node A ∈ V</li>
+      <li>Return for every node the distance from A<br />
+      ≡ classify nodes according to their distance from A</li>
+    </ul>
+    <ul>
+      <li id="bfs-intro-map" class="slide"><strong>Mapper</strong>:
+        <ul>
+          <li>Read line of adjacency list</li>
+          <li>emit <span style="color:blue">adjacent nodes</span> to itself</li>
+          <li>if distance &lt; ∞: <br />
+            emit <span style="color:red">distance + 1</span> to neighbours</li>
+          </ul>
+      </li>
+      <li id="bfs-intro-reduce" class="slide"><strong>Reducer</strong>:
+        <ul>
+          <li>Collect <span style="color:blue">sets of nodes</span></li>
+          <li id="bfs_explain_reduce_add" class="default-hidden">Compute the <span style="color:blue">union</span> of these sets</li>
+          <li id="bfs_explain_reduce_remove" class="default-hidden"><span style="color:blue">Subtract <span style="text-decoration:overline">{·}</span></span> from the other set</li>
+          <li>Compute <span style="color:red">min{distances}</span></li>
+          <li>Emit line of adjacency list</li>
+        </ul>
+    </ul>
+  </section>
+
+  <section class="slide" id="bfs-run">
+    <h2>Breadth-First Search (Example)</h2>
     <div style="position:absolute">
       <p id="bfs_explain" class="default-hidden">Example BFS with start node <strong>A</strong></p>
 
@@ -252,16 +279,91 @@ D → C
   </section>
 
   <section class="slide">
-    <h2>Breadth-First Seach (Analysis)</h2>
+    <h2>Breadth-First Seach (Runtime)</h2>
     <div id="bfs_update_example_graph" style="width:600px; height:400px; float:right"></div>
+    <strong>Example:</strong>
     <ul>
-      <li>Runtime: <strong>#iterations ∈ O(diameter(G))</strong></li>
+      <li>Result of BFS(<em>A</em>),<br />
+        ring ≡ nodes with same distance to A</li>
+      <li id="bfs_intial_runtime" class="slide">Runtime: <strong>#iterations ∈ O(diameter(G))</strong></li>
+      <li id="bfs_update_question" class="slide">What's the effect of removing this edge?</li>
+      <li id="bfs_update_action" class="slide">Update every node <strong>dependent only on B</strong><br />
+        i.e. <em>B1, B2, B3, B4</em> but not <em>B5</em></li>
+      <li id="bfs_update_mapreduce" class="slide">Still, full iteration for each ring</li>
       <li>Update cost: <strong>#iterations ∈ O(diameter(G) - <em>k</em>)</strong></li>
     </ul>
-    <button type="button" id="remove-edge-bfs-button">Remove (A,B)</button><br />
-    <button type="button" id="add-edge-bfs-button">Add (A,H)</button>
   </section>
 
+  <section class="slide" id="apsp-header">
+    <h1>All-Pairs Shortest-Path</h1>
+  </section>
+  <section class="slide" id="apsp-introduction">
+    <h2>All-Pairs Shortest-Path</h2>
+    <ul>
+    	
+      <li>Given a (undirected) graph G = (V,E), a start node A ∈ V,<br />
+        a weight c: E ⟶ ℝ+</li>
+      <li>Return for every node a shortest path w.r.t. c to every other node</li>
+      <li class="slide" id="apsp-how-to-weight">Weights are assigned to the edges in the adjacency list, e.g.
+        <pre><code>A	(B, 2), (C, 5)
+B	(A, 2), (C, 1) ...</code></pre></li>
+      <li class="slide" id="apsp-how-to-path">Paths are represented by a next-hop information:
+        <object type="deckjs/svg" class="svgitem floatright bfs-run">
+          <param name="src" value="vectorgraphics/sp_example.svg" />
+          <param name="width" value="400px" />
+          <param name="height" value="200px" />
+        </object>
+        <div class="slide anim-show anim-continue" data-what="#sp_longer"></div>
+        <div class="anim-hide slide" data-what="#sp_example" id="slide_sp_longer"></div>
+        <div class="slide anim-show anim-continue" data-what="#sp_shorter"></div>
+        <div class="anim-hide slide" data-what="#sp_longer" id="slide_sp_shorter"></div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="slide" id="apsp-mapred">
+    <h2>All-Pairs Shortest-Path with MapReduce</h2>
+    <ul>
+      <li><strong>Map:</strong>
+        <ul>
+          <li>Emit known shortest routes to all neighbours<br />
+          	Initially: just the neighbours</li>
+          <li>Emit neighbours to itself</li>
+        </ul>
+      </li>
+      <div class="slide" id="apsp-map-figure" style="float:right">
+      	<object type="deckjs/svg" class="svgitem floatright bfs-run">
+          <param name="src" value="vectorgraphics/apsp_mapemit.svg" />
+          <param name="width" value="500px" />
+          <param name="height" value="300px" />
+        </object>
+      </div>
+      <li class="slide" id="apsp-reduce"><strong>Reduce:</strong>
+        <ul>
+          <li>Collect own neighbours<br />
+          	(for maintaining the graph structure)</li>
+          <li>Determine shortest routes based on incoming values</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section class="slide" id="apsp-example">
+    <h2>All-Pairs Shortest-Path (Example)</h2>
+    <div class="slide anim-show anim-continue" data-what="#apsp_map1"></div>
+    <div class="anim-hide slide" data-what="#apsp_initialGraph" id="slide_apsp_map1"></div>
+    <div class="slide anim-show anim-continue" data-what="#apsp_step1"></div>
+    <div class="anim-hide slide" data-what="#apsp_map1" id="slide_apsp_step1"></div>
+    <div class="slide anim-show anim-continue" data-what="#apsp_map2"></div>
+    <div class="anim-hide slide" data-what="#apsp_step1" id="slide_apsp_map2"></div>
+    <div class="slide anim-show anim-continue" data-what="#apsp_step2"></div>
+    <div class="anim-hide slide" data-what="#apsp_map2" id="slide_apsp_step1"></div>
+    <object type="deckjs/svg" class="svgitem floatright bfs-run">
+      <param name="src" value="vectorgraphics/apsp_run.svg" />
+      <param name="width" value="500px" />
+      <param name="height" value="400px" />
+    </object>
+  </section>
 </article>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- - - - End of the presentatoin - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

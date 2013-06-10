@@ -3150,8 +3150,8 @@ var Canvas;
       this.viz = viz;
       this.config = $.merge({
         idSuffix: '-bkcanvas',
-        levelDistance: 80, // TODO make this configurable
-        numberOfCircles: 6,
+        levelDistance: 70, // TODO make this configurable
+        numberOfCircles: 4,
         CanvasStyles: {},
         offset: 0
       }, options);
@@ -3168,7 +3168,6 @@ var Canvas;
       for(var s in styles) ctx[s] = styles[s];
       var n = conf.numberOfCircles,
           rho = conf.levelDistance;
-      console.log(this)
       for(var i=1; i<=n; i++) {
         ctx.beginPath();
         ctx.arc(0, 0, rho * i, 0, 2 * Math.PI, false);

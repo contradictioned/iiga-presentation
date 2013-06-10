@@ -1,5 +1,8 @@
 var labelType, useGradients, nativeTextSupport, animate;
 
+/* the rgraph instance for the update example*/
+var update_example_graph;
+
 (function() {
   var ua = navigator.userAgent,
       iStuff = ua.match(/iPhone/i) || ua.match(/iPad/i),
@@ -16,8 +19,15 @@ var labelType, useGradients, nativeTextSupport, animate;
 })();
 
 function initBfsUpdateGraph(){
-    var json = {"id": "A",
+    /*var json = {"id": "A",
                 "name" : "A",
+                "adjacencies": [{
+                    "nodeTo": "B",
+                    "data": {
+                        "$color": "red"
+                    }
+                }
+                ],
                 "children": [{
                     "id": "B",
                     "name": "B",
@@ -103,10 +113,86 @@ function initBfsUpdateGraph(){
                         "children": []
                         }
                     ]}
-                ]}
+                ]}*/
+
+    var json = [{
+        "id": "A",  
+        "name": "A",  
+        "adjacencies": [{  
+            "nodeTo": "B",
+            "data" : { "$color" : "#ccc" }
+        }, {  
+            "nodeTo": "C"
+        }, {  
+            "nodeTo": "D"
+        }, {  
+            "nodeTo": "E"
+        }, {  
+            "nodeTo": "F"
+        }]  
+    }, {
+        "id": "C",
+        "name": "C",  
+        "adjacencies": [{  
+            "nodeTo": "C1",
+        }, {  
+            "nodeTo": "C2"
+        }, {  
+            "nodeTo": "C3"
+        }, {  
+            "nodeTo": "C4"
+        }, {  
+            "nodeTo": "C5"
+        }]  
+    }, {
+        "id": "D",
+        "name": "D",  
+        "adjacencies": [{  
+            "nodeTo": "D1",
+        }, {  
+            "nodeTo": "D2"
+        }, {  
+            "nodeTo": "D3"
+        }, {  
+            "nodeTo": "D4"
+        }, {  
+            "nodeTo": "D5"
+        }, {  
+            "nodeTo": "B5"
+        }]  
+    }, {
+        "id": "E",
+        "name": "E",  
+        "adjacencies": [{
+            "nodeTo": "E1",
+        }, {  
+            "nodeTo": "E2"
+        }, {  
+            "nodeTo": "E3"
+        }, {  
+            "nodeTo": "E4"
+        }, {  
+            "nodeTo": "E5"
+        }]  
+    }, {
+        "id": "B",
+        "name": "B",  
+        "adjacencies": [{  
+            "nodeTo": "B1",
+        }, {  
+            "nodeTo": "B2"
+        }, {  
+            "nodeTo": "B3"
+        }, {
+            "nodeTo": "B4"
+        }, {  
+            "nodeTo": "B5"
+        }]  
+    }];
+
     //end
     //init RGraph
-    var rgraph = new $jit.RGraph({
+    update_example_graph = new $jit.RGraph({
         'injectInto': 'bfs_update_example_graph',
         //Optional: Create a background canvas
         //for painting concentric circles.
@@ -115,21 +201,21 @@ function initBfsUpdateGraph(){
             'strokeStyle': '#DDD',
             'shadowBlur': 50,
             'shadowColor': '#CCC',
-            'levelDistance': 80
+            'levelDistance': 70
           }
         },
-        'levelDistance': 80,
+        'levelDistance': 70,
 
         //Set Edge and Node colors.
         Node: {
             color: '#F99',
-            overridable:true
+            overridable: true
         },
 
         Edge: {
-            overridable:true,
+            overridable: true,
             color: '#CCC',
-            lineWidth:1.5
+            lineWidth: 1.5
         },
         //Add the node's name into the label
         //This method is called only once, on label creation.
@@ -162,15 +248,16 @@ function initBfsUpdateGraph(){
         }
     });
     //load JSON data.
-    rgraph.loadJSON(json);
+    update_example_graph.loadJSON(json);
     
-    rgraph.graph.addAdjacence({'id': 'C'}, {'id': 'BE'}, null);
-    rgraph.graph.addAdjacence({'id': 'D'}, {'id': 'BE'}, null);
-    rgraph.graph.addAdjacence({'id': 'E'}, {'id': 'D'}, null);
-    rgraph.graph.addAdjacence({'id': 'C'}, {'id': 'B'}, null);
+    update_example_graph.graph.addAdjacence({'id': 'C'}, {'id': 'D1'}, null);
+    update_example_graph.graph.addAdjacence({'id': 'D'}, {'id': 'D1'}, null);
+    update_example_graph.graph.addAdjacence({'id': 'E'}, {'id': 'D'}, null);
+    update_example_graph.graph.addAdjacence({'id': 'C'}, {'id': 'B'}, null);
+    update_example_graph.graph.addAdjacence({'id': 'F'}, {'id': 'B'}, null);
 
     //Compute positions and plot
-    rgraph.refresh();
+    update_example_graph.refresh();
     //end
 
     /*
@@ -221,68 +308,67 @@ function initBfsUpdateGraph(){
         });
     };
     */
-    //Remove edges
-    button = $jit.id('remove-edge-bfs-button');
-    button.onclick = function() {
-        rgraph.op.removeEdge([['A', "B"]], {
-            type: 'fade:seq',
-            duration: 1000,
-            fps: 30,
-            hideLabels: true
-        });
-    };
-
-    button = $jit.id('add-edge-bfs-button');
-    button.onclick = function() {
-        rgraph.op.sum([{id:"A", adjacencies:["H"]}], {
-            type: 'fade:seq',
-            duration: 1000,
-            fps: 30,
-            hideLabels: true
-        });
-    };
-
-    /*
-    //Add a Graph (Sum)
-    button = $jit.id('sum');
-    button.onclick = function(){
-        //get graph to add.
-        var trueGraph = eval('(' + graph + ')');        
-        //get animation type.
-        var stype = $jit.id('select-type-sum');
-        var sindex = stype.selectedIndex;
-        var type = stype.options[sindex].text;
-        //perform sum animation.
-        rgraph.op.sum(trueGraph, {
-            type: type,
-            fps: getFPS(),
-            duration: getDuration(),
-            hideLabels: hideLabels(),
-            onComplete: function(){
-                Log.write("sum complete!");
-            }
-        });
-    };
-
-    //Morph
-    button = $jit.id('morph');
-    button.onclick = function(){
-        //get graph to morph to.
-        var trueGraph = eval('(' + graph + ')');        
-        //get animation type.
-        var stype = $jit.id('select-type-morph');
-        var sindex = stype.selectedIndex;
-        var type = stype.options[sindex].text;
-        //perform morphing animation.
-        rgraph.op.morph(trueGraph, {
-            type: type,
-            fps: getFPS(),
-            duration: getDuration(),
-            hideLabels: hideLabels(),
-            onComplete: function(){
-                Log.write("morph complete!");
-            }
-        });
-    };*/
-    //end
+    
 }
+
+$(function() {
+    $("#bfs_update_question").bind('deck.becameCurrent', function(ev, direction) {
+      if(direction == "forward"){
+        // highlight edge (A,B)
+        edge = update_example_graph.graph.getAdjacence("A", "B").data.$color = "red"
+        update_example_graph.refresh()
+      }
+    });
+    $("#bfs_update_question").bind('deck.lostCurrent', function(ev, direction) {
+      if(direction == "reverse"){
+        // remove highlight of edge (A,B)
+        edge = update_example_graph.graph.getAdjacence("A", "B").data.$color = "#ccc"
+        update_example_graph.refresh()
+      }
+    });
+
+    $("#bfs_update_action").bind('deck.becameCurrent', function(ev, direction) {
+      if(direction == "forward"){
+        // mark all affected nodes red
+        var affectedNodes = ["B", "B1", "B2", "B3", "B4", "B5"];
+        for(var key in affectedNodes) {
+            var n = affectedNodes[key];
+            var node = update_example_graph.graph.getNode(n);
+            node.data.$color = "blue";
+        }
+
+        update_example_graph.op.removeEdge([['A', "B"]], {
+            type: 'fade:seq',
+            duration: 1000,
+            fps: 30,
+            hideLabels: true
+        });
+      }
+    });
+    $("#bfs_update_action").bind('deck.lostCurrent', function(ev, direction) {
+      if(direction == "reverse"){
+        var affectedNodes = ["B", "B1", "B2", "B3", "B4", "B5"];
+        for(var key in affectedNodes) {
+            var n = affectedNodes[key];
+            var node = update_example_graph.graph.getNode(n);
+            node.data.$color = "#F99";
+        }
+
+        // remove highlight of edge (A,B)
+        var theEdge = [
+            {"id": "A",
+            "name": "A",
+            "adjacencies": [{
+                "nodeTo": "B",
+                "data": {"$color": "red"}
+                }]
+            }]
+        update_example_graph.op.sum(theEdge, {
+            type: 'fade:seq',
+            duration: 1000,
+            fps: 30,
+            hideLabels: true
+        });
+      }
+    });
+})
