@@ -14,7 +14,7 @@
    id="svg5924"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="Neues Dokument 15">
+   sodipodi:docname="apsp_mapemit.svg">
   <defs
      id="defs5926">
     <marker
@@ -40,7 +40,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="4"
-     inkscape:cx="1.6346546"
+     inkscape:cx="2.71875"
      inkscape:cy="66.807635"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -49,9 +49,9 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1596"
+     inkscape:window-width="796"
      inkscape:window-height="861"
-     inkscape:window-x="0"
+     inkscape:window-x="800"
      inkscape:window-y="18"
      inkscape:window-maximized="0" />
   <metadata
@@ -62,7 +62,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -182,7 +182,7 @@
            height="12"
            x="41.25"
            y="84.294357" /></flowRegion><flowPara
-         id="flowPara6961"></flowPara></flowRoot>    <text
+         id="flowPara6961" /></flowRoot>    <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="46.25"
@@ -193,6 +193,6 @@
          sodipodi:role="line"
          id="tspan6965"
          x="46.25"
-         y="92.544357">(Z,15,3)</tspan></text>
+         y="92.544357">(Z,15,X)</tspan></text>
   </g>
 </svg>
