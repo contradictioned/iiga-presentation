@@ -63,41 +63,33 @@
   <section class="slide" id="title-slide">
     <h1>Incremental Iterative Graph Algorithms<br /> with MapReduce<br />
     <small>Bachelor thesis presentation by Manuel Hoffmann</small></h1>
-    <div style="width:800px; height:300px" id="sigma-title"></div>
+    <div style="width:1000px; height:300px" id="sigma-title"></div>
   </section>
   <!-- - - - Agenda - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <section class="slide" id="agenda">
     <h2>Agenda</h2>
-    <ol style="position:absolute; left:10%; top:20%; height:auto">
-      <li id="agenda-bullet-introduction">Introduction
-        <ol>
-          <li>Graphs</li>
-          <li>MapReduce</li>
-          <li>Graphs and MapReduce</li>
-          <li>Incremental computation</li>
-        </ol>
-      </li>
+    <ol style="position:absolute; left:10%; top:100px; height:auto">
+      <li id="agenda-bullet-introduction">Introduction</li>
       <li id="agenda-bullet-bfs">Breadth-First Search
         <ol>
           <li>Basic BFS Algorithm</li>
           <li>Updates of the Graph</li>
-          <li>Combiner and Termination</li>
+          <li>Analysis</li>
         </ol>
       </li>
       <li id="agenda-bullet-apsp">All-Pairs Shortest Paths
         <ol>
           <li>Basic APSP Algorithm</li>
           <li>Updates of the Graph</li>
-          <li>Combiner and Termination</li>
         </ol>
       </li>
     </ol>
-    <ol start="4" style="position:absolute; left:50%; top:20%; height:auto">
+    <ol start="4" style="position:absolute; left:50%; top:100px; height:auto">
       <li id="agenda-bullet-pagerank">PageRank
         <ol>
           <li>Basic Algorithm</li>
           <li>Updates of the Graph</li>
-          <li>Combiner and Termination</li>
+          <li>Analysis</li>
         </ol>
       </li>
       <li id="agenda-bullet-evaluation">Evaluation of Breadth-First Search and Pagerank</li>
@@ -279,9 +271,20 @@ D → C
   </section>
 
   <section class="slide">
-    <h2>Breadth-First Seach (Runtime)</h2>
-    <div id="bfs_update_example_graph" style="width:600px; height:400px; float:right"></div>
-    <strong>Example:</strong>
+    <h2>Breadth-First Search (Analysis)</h2>
+    <ul>
+      <li><strong>Termination</strong>
+        <ul>
+          <li>Mapper emits value of previous iteration</li>
+          <li>Reducer computes new value,<br />increments <strong>counter</strong> if old value ≠ new value</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <h2>Breadth-First Seach (Analysis)</h2>
+    <div id="bfs_update_example_graph" style="width:600px; height:600px; float:right"></div>
     <ul>
       <li>Result of BFS(<em>A</em>),<br />
         ring ≡ nodes with same distance to A</li>
@@ -361,8 +364,8 @@ B	(A, 2), (C, 1) ...</code></pre></li>
     <div class="anim-hide slide" data-what="#apsp_map2" id="slide_apsp_step1"></div>
     <object type="deckjs/svg" class="svgitem floatright bfs-run">
       <param name="src" value="vectorgraphics/apsp_run.svg" />
-      <param name="width" value="500px" />
-      <param name="height" value="400px" />
+      <param name="width" value="800px" />
+      <param name="height" value="700px" />
     </object>
   </section>
 
@@ -377,9 +380,9 @@ B	(A, 2), (C, 1) ...</code></pre></li>
         where p is a probability distribution, i.e. Σp(e) = 1</li>
       <div class="slide anim-show anim-continue" data-what="#pr_formula"></div>
       <li class="slide">Return for every node its PageRank value</li>
-      <div class="slide anim-show anim-continue" data-what="#pr_formula_rnd"></div>
-      <li class="slide" id="pr-informally">PR(n) = <em>possibility, that a random surfer clicks a link on another website to website n <br />
       <div class="slide anim-show anim-continue" data-what="#pr_formula_sum"></div>
+      <li class="slide" id="pr-informally">PR(n) = <em>possibility, that a random surfer clicks a link on another website to website n <br />
+      <div class="slide anim-show anim-continue" data-what="#pr_formula_rnd"></div>
       <span class="slide" id="pr-informally2">and possibility, that a she types a random url (∈ V) into her browser</span></em></li>
       <object type="deckjs/svg" class="svgitem floatright bfs-run">
         <param name="src" value="vectorgraphics/pr_formula.svg" />
@@ -406,6 +409,97 @@ B	(A, 2), (C, 1) ...</code></pre></li>
       </li>
     </ul>
   </section>
+
+  <section class="slide" id="pr-example">
+    <h2>PageRank (Example)</h2>
+    <ul>
+      <li id="pr_ex_params" class="default-hidden">N = 6, d = 0.85, (1-d) / N = 0.025</li>
+      <li id="pr_ex_init" class="default-hidden">Initial value for each node: 1 / N = 0.16</li>
+      <li id="pr_ex_map" class="default-hidden"><strong>Map:</strong> ∀ node: Emit PageRank / #outlinks to every neighbour</li>
+      <li id="pr_ex_reduce" class="default-hidden"><strong>Reduce:</strong> Sum up incoming values...</li>
+      <li id="pr_ex_end" class="default-hidden">...and add random jump factor.</li>
+      <li id="pr_ex_next" class="default-hidden">Start next iteration with computed PageRank</li>
+    </ul>
+
+    <div style="position:absolute; top:200px">
+      <object type="deckjs/svg" class="svgitem floatright">
+        <param name="src" value="vectorgraphics/pr_run.svg" />
+        <param name="width" value="800px" />
+        <param name="height" value="500px" />
+      </object>
+    </div>
+
+    <div class="slide anim-show" data-what="#pr_init" id="pr_init"></div>
+    <div class="slide anim-continue anim-hide" data-what="#pr_init"></div>
+    <div class="slide anim-show" data-what="#pr_map" id="pr_map"></div>
+    <div class="slide anim-continue anim-hide" data-what="#pr_map"></div>
+    <div class="slide anim-show" data-what="#pr_reduce" id="pr_reduce"></div>
+    <div class="slide anim-continue anim-hide" data-what="#pr_reduce"></div>
+    <div class="slide anim-show" data-what="#pr_end" id="pr_end"></div>
+    <div class="slide anim-continue anim-hide" data-what="#pr_end"></div>
+    <div class="slide anim-show" data-what="#pr_next" id="pr_next"></div>
+  </section>
+
+  <section class="slide" id="pr-analysis">
+    <h2>PageRank (Analysis)</h2>
+    <ul>
+      <li><strong>Termination</strong>
+        <ul>
+          <li>Mapper emits old PageRank to itself</li>
+          <li>Reducer checks if changes are smaller than δ (e.g. 0.001),<br />
+            otherwise increments counter.
+          <li>Implementation of stopping criterion ‖PR<sub>i</sub> - PR<sub>i+1</sub>‖<sub>∞</sub> &lt; δ</li>
+        </ul>
+      </li>
+      <li></li>
+    </ul>
+  </section>
+
+  <section class="slide" id="pr-update">
+    <h2>Updates in PageRank</h2>
+    <ul>
+      <li>Technically, as before:
+        <ul>
+          <li>Iteration (k) for adding new edge, mapper emits set of new adjacencies to a node.</li>
+          <li>Iteration (k+1) emits new pagerank ratio to all of its neighbours.</li>
+        </ul>
+      </li>
+      <li class="slide" id="pr-before-update">Before: Value of node A affects value of node B "all or nothing".
+        <ul>
+          <li>min{3,2,<span id="pr-update-before">5</span><span style="color:blue" id="pr-update-after">6</span>} = 2</li>
+          <div class="slide anim-hide anim-continue" data-what="#pr-update-before"></div>
+          <div class="slide anim-show" data-what="#pr-update-after" id="pr-before-updated"></div>
+          <li>Also change affects value all or nothing</li>
+        </ul>
+      </li>
+      <li class="slide" id="pr-update-effect">PageRank: Value of node A affects value of node B to a small extent.</li>
+    </ul>
+  </section>
+
+  <section class="slide" id="pr-update2">
+    <h2>Updates in PageRank (2)</h2>
+    <ul>
+      <li>PageRank value for node B is determined by the PageRank value and outdegree of all inlinking nodes.</li>
+      <div class="slide anim-hide anim-continue" data-what="#pr_uex_start"></div>
+      <li class="slide anim-show" data-what="#pr_uex_end">Change of the degree of node A affects PageRank computation of B.</li>
+      <li class="slide" id="#pr_up_small_changes">Outdegree<sub>A</sub>·Outdegree'<sub>A</sub> dominates, so changes are rather small.</li>
+    </ul>
+    <object type="deckjs/svg" class="svgitem floatright">
+      <param name="src" value="vectorgraphics/pr_update.svg" />
+      <param name="width" value="800px" />
+      <param name="height" value="500px" />
+    </object>
+  </section>
+
+  <section class="slide" id="evaluation-head">
+    <h1>Evaluation</h1>
+  </section>
+
+  <section class="slide" id="evaluation-head">
+    <h2>Evaluation</h2>
+  </section>
+
+
 
 </article>
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -201,10 +201,10 @@ function initBfsUpdateGraph(){
             'strokeStyle': '#DDD',
             'shadowBlur': 50,
             'shadowColor': '#CCC',
-            'levelDistance': 70
+            'levelDistance': 90
           }
         },
-        'levelDistance': 70,
+        'levelDistance': 90,
 
         //Set Edge and Node colors.
         Node: {

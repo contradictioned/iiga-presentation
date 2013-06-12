@@ -6,10 +6,10 @@ body {
   font-family: "Helvetica Neue", sans-serif;
   font-size: 1.75em;
   background: #fff;
-  max-width: 864px;
+  max-width: 1000px;
   margin: 16px auto 24px auto;
-  min-height: 560px;
-  font-size: 18px;
+  min-height: 800px;
+  font-size: 22px;
 }
 
 #title-slide {
@@ -83,6 +83,7 @@ BELOW ARE FROM swiss.css
  **/
 .deck-container .slide {
   /* background: #fff;*/
+  font-size: 30px;
 }
 .deck-container .slide h1 {
   color: #000;
@@ -90,6 +91,7 @@ BELOW ARE FROM swiss.css
 .deck-container .slide h2 {
   color: #c00;
   border-bottom-color: #ccc;
+  font-size:1em;
 }
 .deck-container .slide h3 {
   color: #888;
@@ -156,4 +158,32 @@ BELOW ARE FROM swiss.css
 }
 .deck-container.deck-menu .deck-current, .no-touch .deck-container.deck-menu .slide:hover {
   background: #ddf;
+}
+
+
+.on-slide-pr-example #pr_ex_params,
+.on-slide-pr-example #pr_ex_init {
+  display: list-item;
+}
+
+.on-slide-pr_init #pr_ex_init {
+  display: list-item;
+}
+
+.on-slide-pr_map #pr_init,
+.on-slide-pr_map #pr_ex_map {
+  display: list-item;
+}
+
+.on-slide-pr_reduce #pr_ex_reduce {
+  display: list-item;
+}
+
+.on-slide-pr_end #pr_ex_reduce,
+.on-slide-pr_end #pr_ex_end {
+  display: list-item;
+}
+
+.on-slide-pr_next #pr_ex_next {
+  display: list-item;
 }
