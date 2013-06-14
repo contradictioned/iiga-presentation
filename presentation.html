@@ -52,6 +52,12 @@
 
     <script src="libs/Jit/jit.js"></script>
     <script src="bfsupdate.js"></script>
+
+    <script type="text/javascript" src="libs/jqPlot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="libs/jqPlot/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="libs/jqPlot/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="libs/jqPlot/jqplot.pointLabels.min.js"></script>
+    <script src="eval.js"></script>
   </head>
 
 <body>
@@ -69,31 +75,12 @@
   <section class="slide" id="agenda">
     <h2>Agenda</h2>
     <ol style="position:absolute; left:10%; top:100px; height:auto">
-      <li id="agenda-bullet-introduction">Introduction</li>
-      <li id="agenda-bullet-bfs">Breadth-First Search
-        <ol>
-          <li>Basic BFS Algorithm</li>
-          <li>Updates of the Graph</li>
-          <li>Analysis</li>
-        </ol>
-      </li>
-      <li id="agenda-bullet-apsp">All-Pairs Shortest Paths
-        <ol>
-          <li>Basic APSP Algorithm</li>
-          <li>Updates of the Graph</li>
-        </ol>
-      </li>
-    </ol>
-    <ol start="4" style="position:absolute; left:50%; top:100px; height:auto">
-      <li id="agenda-bullet-pagerank">PageRank
-        <ol>
-          <li>Basic Algorithm</li>
-          <li>Updates of the Graph</li>
-          <li>Analysis</li>
-        </ol>
-      </li>
-      <li id="agenda-bullet-evaluation">Evaluation of Breadth-First Search and Pagerank</li>
-      <li id="agenda-bullet-conclusion">Final thoughts and Outlook</li>
+      <li id="agenda-bullet-introduction">Introduction<br />&nbsp;</li>
+      <li id="agenda-bullet-bfs">Breadth-First Search</li>
+      <li id="agenda-bullet-apsp">All-Pairs Shortest-Paths</li>
+      <li id="agenda-bullet-pagerank">PageRank<br />&nbsp;</li>
+      <li id="agenda-bullet-evaluation">Evaluation of Breadth-First Search and PageRank</li>
+      <li id="agenda-bullet-conclusion">Final thoughts and outlook</li>
     </ol>
   </section>
 
@@ -118,13 +105,13 @@
 
   <section class="slide" id="graph-rep">
     <h2>Representing Graphs</h2>
-    <div style="float:left; width: 30%">
-      <h3>The bad way</h3>
+    <div style="float:left; width: 40%">
+      <h3>Adjacency matrix</h3>
       <ul>
         <li>Adjacency Matrix</li>
         <li>Space: O(n²)</li>
-        <li>+ element access</li>
-        <li>+ </li>
+        <li>direct access to every edge</li>
+        <li>can not easily be divided (?)</li>
       </ul>
 
       <pre>
@@ -135,19 +122,20 @@
 <strong>D</strong> <span class="example_graph">0</span> <span class="example_graph">0</span> <span class="example_graph">1</span> <span class="example_graph">0</span>
 </pre>
     </div>
-    <div style="float:left; width: 40%">
-      <object type="deckjs/svg" class="svgitem floatright example_graph">
-        <param name="src" value="vectorgraphics/example_graph2.svg" />
+    <div style="float:left; width: 30%">
+      <object type="deckjs/svg" class="svgitem floatright example_graph2">
+        <param name="src" value="vectorgraphics/example_graph3.svg" />
         <param name="width" value="300px" />
         <param name="height" value="300px" />
       </object>
     </div>
     <div style="float:left; width: 30%">
-      <h3>The good way</h3>
+      <h3>Adjacency List</h3>
       <ul>
         <li>Adjacency List</li>
         <li>Space: O(n+m)</li>
-        <li>+ iterate over adjacent</li>
+        <li>split it by line</li>
+        <li>direct access to neighbours</li>
       </ul>
 
       <pre>
@@ -159,6 +147,45 @@ D → C
     </div>
   </section>
   
+  <section class="slide" id="mapreduce">
+    <h2>MapReduce</h2>
+    <object type="deckjs/svg" class="svgitem">
+      <param name="src" value="vectorgraphics/mr.svg" />
+      <param name="width" value="900px" />
+      <param name="height" value="500px" />
+    </object>
+    <div class="slide anim-show" data-what="#mr_map1" id="mr_slide_map1"></div>
+    <div class="slide anim-show" data-what="#mr_map2" id="mr_slide_map2"></div>
+    <div class="slide anim-show" data-what="#mr_shuffle1" id="mr_slide_shuffle1"></div>
+    <div class="slide anim-show" data-what="#mr_shuffle2" id="mr_slide_shuffle2"></div>
+    <div class="slide anim-show" data-what="#mr_shuffle3" id="mr_slide_shuffle3"></div>
+    <div class="slide anim-show" data-what="#mr_reduce1" id="mr_slide_reduce1"></div>
+    <div class="slide anim-show" data-what="#mr_reduce2" id="mr_slide_reduce2"></div>
+    <div class="slide anim-show" data-what="#mr_labels" id="mr_slide_labels"></div>
+  </section>
+
+  <section class="slide" id="itgraph-mapreduce">
+    <h2>Iterative graph algorithms and MapReduce</h2>
+    <ul>
+      <li>Format: (extended) adjacency list
+        <ul>
+          <li>Nodes are identified by name</li>
+          <li>map() for each line</li>
+          <div class="slide anim-show" data-what="#mrg_rest" id="iterative">
+          <li>map() can emit to every node and neighbours</li>
+          <li>"A sends to B ..."
+        </ul></div>
+      </li>
+      <li>Output of one step is input for next step</li>
+    </ul>
+
+    <object type="deckjs/svg" class="svgitem">
+      <param name="src" value="vectorgraphics/mr_graph.svg" />
+      <param name="width" value="1000px" />
+      <param name="height" value="200px" />
+    </object>
+  </section>
+
 
   <!-- - - - Breadth-First Search - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   <section class="slide" id="bfs-header">
@@ -203,8 +230,10 @@ D → C
           <li>∀ node: emit <span style="color:blue">adjacent nodes</span> to itself</li>
           <li>∀ node with distance &lt; ∞: <br />
             emit <span style="color:red">distance + 1</span> to neighbours</li>
+            <br /><br /><br /><br />
           <li id="bfs_explain_map_add" class="default-hidden" style="font-style:italic">In the change set:<br />
-            ∀ new edge (<strong>A,D</strong>): emit <strong>{D}</strong> to A</li>
+            ∀ new edge (<strong>A,D</strong>): emit <strong>{D}</strong> to A<br />
+            e.g. with: <code>A ∞ D</code></li>
           <li id="bfs_explain_map_remove" class="default-hidden" style="font-style:italic">In the delete set:<br />
             ∀ edge (<strong>A,D</strong>) to be removed: emit <strong style="text-decoration:overline">{D}</strong> to A</li>
         </ul>
@@ -271,9 +300,15 @@ D → C
   </section>
 
   <section class="slide">
-    <h2>Breadth-First Search (Analysis)</h2>
+    <h2>Breadth-First Search</h2>
     <ul>
-      <li><strong>Termination</strong>
+      <li><strong>Adding/removing nodes</strong>
+        <ul>
+          <li>Add node implicitly with new edge</li>
+          <li>Add node explicitly without edge => it's not reachable</li>
+        </ul>
+      </li>
+      <li class="slide" id="bfs_termination"><strong>Termination</strong>
         <ul>
           <li>Mapper emits value of previous iteration</li>
           <li>Reducer computes new value,<br />increments <strong>counter</strong> if old value ≠ new value</li>
@@ -284,15 +319,15 @@ D → C
 
   <section class="slide">
     <h2>Breadth-First Seach (Analysis)</h2>
-    <div id="bfs_update_example_graph" style="width:600px; height:600px; float:right"></div>
+    <div id="bfs_update_example_graph" style="width:500px; height:600px; float:right"></div>
     <ul>
       <li>Result of BFS(<em>A</em>),<br />
         ring ≡ nodes with same distance to A</li>
+      <li id="bfs_update_mapreduce" class="slide">For each ring one iteration is needed</li>
       <li id="bfs_intial_runtime" class="slide">Runtime: <strong>#iterations ∈ O(diameter(G))</strong></li>
       <li id="bfs_update_question" class="slide">What's the effect of removing this edge?</li>
       <li id="bfs_update_action" class="slide">Update every node <strong>dependent only on B</strong><br />
         i.e. <em>B1, B2, B3, B4</em> but not <em>B5</em></li>
-      <li id="bfs_update_mapreduce" class="slide">Still, full iteration for each ring</li>
       <li id="bfs_update_cost" class="slide">Update cost: <strong>#iterations ∈ O(diameter(G) - <em>k</em>)</strong></li>
     </ul>
   </section>
@@ -369,6 +404,21 @@ B	(A, 2), (C, 1) ...</code></pre></li>
     </object>
   </section>
 
+  <section class="slide" id="apsp-explanation">
+    <h2>All-Pairs Shortest-Path explanations</h2>
+    <ul>
+      <li>Idea from Bellman-Ford: If you find a shortcut, take it</li>
+      <li>This algorithm needs O(n·m) iterations<br />
+        (doing n Bellman-Ford steps in parallel)</li>
+      <li>In each iteration the graph information grows up to 3·n²</li>
+      <li class="slide" id="apsp-ex-dv">MapReduce implementation ≌ distance-vector routing</li>
+      <div class="slide" id="apsp-ex-updates">
+      <li>Updates for free :)</li>
+      <li>If link is changed, change shortest paths over that link.</li>
+      </div>
+    </ul>
+  </section>
+
   <section class="slide" id="pr-header">
     <h1>PageRank</h1>
   </section>
@@ -376,8 +426,9 @@ B	(A, 2), (C, 1) ...</code></pre></li>
   <section class="slide" id="pr-introduction">
     <h2>PageRank</h2>
     <ul>
-      <li>Given a graph G = (V,E) and a probability p: E ⟶ {0,1} ⊂ ℝ<br />
-        where p is a probability distribution, i.e. Σp(e) = 1</li>
+      <li>Given a graph G = (V,E),<br />
+      Start with a labeling p: V ⟶ {0,1} ⊂ ℝ<br />
+        where p is a probability distribution, i.e. Σp(v) = 1, v ∈ V</li>
       <div class="slide anim-show anim-continue" data-what="#pr_formula"></div>
       <li class="slide">Return for every node its PageRank value</li>
       <div class="slide anim-show anim-continue" data-what="#pr_formula_sum"></div>
@@ -441,7 +492,7 @@ B	(A, 2), (C, 1) ...</code></pre></li>
   </section>
 
   <section class="slide" id="pr-analysis">
-    <h2>PageRank (Analysis)</h2>
+    <h2>PageRank</h2>
     <ul>
       <li><strong>Termination</strong>
         <ul>
@@ -451,7 +502,7 @@ B	(A, 2), (C, 1) ...</code></pre></li>
           <li>Implementation of stopping criterion ‖PR<sub>i</sub> - PR<sub>i+1</sub>‖<sub>∞</sub> &lt; δ</li>
         </ul>
       </li>
-      <li></li>
+      
     </ul>
   </section>
 
@@ -461,7 +512,7 @@ B	(A, 2), (C, 1) ...</code></pre></li>
       <li>Technically, as before:
         <ul>
           <li>Iteration (k) for adding new edge, mapper emits set of new adjacencies to a node.</li>
-          <li>Iteration (k+1) emits new pagerank ratio to all of its neighbours.</li>
+          <li>Iteration (k+1) emits new PageRank ratio to all of its neighbours.</li>
         </ul>
       </li>
       <li class="slide" id="pr-before-update">Before: Value of node A affects value of node B "all or nothing".
@@ -487,7 +538,7 @@ B	(A, 2), (C, 1) ...</code></pre></li>
     <object type="deckjs/svg" class="svgitem floatright">
       <param name="src" value="vectorgraphics/pr_update.svg" />
       <param name="width" value="800px" />
-      <param name="height" value="500px" />
+      <param name="height" value="350px" />
     </object>
   </section>
 
@@ -495,10 +546,52 @@ B	(A, 2), (C, 1) ...</code></pre></li>
     <h1>Evaluation</h1>
   </section>
 
-  <section class="slide" id="evaluation-head">
+  <section class="slide" id="evaluation-intro">
     <h2>Evaluation</h2>
+    <ul>
+      <li>Implementation with Hadoop and HDFS</li>
+      <li>Dataset: German Wikipedia link graph
+        <ul>
+          <li>November and December 2012</li>
+        </ul>
+      </li>
+      <li>Run BFS and PR on 6-node cluster</li>
+    </ul>
   </section>
 
+  <section class="slide" id="evaluation-bfs">
+    <h2>Evaluation Breadth-First Search</h2>
+    <ul>
+      <li>Computing November and December after each other (indepentendly).</li>
+      <li>Each computation needed 14 iterations.</li>
+      <li class="slide anim-show" data-what="#diag_bfs_2" id="evaluation-bfs-insert">Adding new edges to result of November (7 iterations).</li>
+      <li class="slide anim-show" data-what="#diag_bfs_3" id="evaluation-bfs-delete">Adding added edges and remove deleted edges (7 iterations).</li>
+      <li class="slide anim-show" data-what="#diag_bfs_4" id="evaluation-bfs-integrate">Adding new edges when previous computation has not finished, yet (7 + 7 iterations).</li>
+    </ul>
+    <object type="deckjs/svg" class="svgitem floatright">
+      <param name="src" value="vectorgraphics/diagram_bfs_totals.svg" />
+      <param name="width" value="800px" />
+      <param name="height" value="300px" />
+    </object>
+
+  </section>
+
+  <section class="slide" id="evaluation-pr">
+    <h2>Evaluation PageRank</h2>
+    <ul>
+      <li>Computing November and December after each other (indepentendly).</li>
+      <li>Each computation needed 56 iterations.</li>
+      <li class="slide anim-show" data-what="#diag_pr_2" id="evaluation-pr-insert">Adding new edges to result of November (2 iterations).</li>
+      <li class="slide anim-show" data-what="#diag_pr_3" id="evaluation-pr-delete">Adding added edges and remove deleted edges (2 iterations).</li>
+      <li class="slide anim-show" data-what="#diag_pr_4" id="evaluation-pr-integrate">Adding new edges when previous computation has not finished, yet (23 + 27 iterations).</li>
+    </ul>
+    <object type="deckjs/svg" class="svgitem floatright">
+      <param name="src" value="vectorgraphics/diagram_pr_totals.svg" />
+      <param name="width" value="800px" />
+      <param name="height" value="300px" />
+    </object>
+
+  </section>
 
 
 </article>
@@ -514,8 +607,14 @@ B	(A, 2), (C, 1) ...</code></pre></li>
 <script>
 $(function() {
 	$.deck('.slide', {
-            // fitMarginX:100, fitMarginY:100,
-            // fitMode: "stretched" //"center middle" //"bottom right" //"top left"
+          // fitMarginX:100, fitMarginY:100,
+          // fitMode: "stretched" //"center middle" //"bottom right" //"top left"
+          keys: {
+            // enter, space, page down, right arrow, down arrow
+            next: [13, 32, 34, 39, 40],
+            // backspace, page up, left arrow, up arrow
+            previous: [8, 33, 37, 38]
+          },
         });
 });
 </script>
